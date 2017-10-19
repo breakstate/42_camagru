@@ -17,10 +17,12 @@
 
         if ($statement->rowCount() == 1)
         {
-          echo "yes";
+          $result = "<p>Registration successfull</p>";
+          //echo "yes";
         }
     }catch(PDOException $ex){
-      echo "no";
+      $result = "<p>An error occurred: " . $ex->getMessage() . "</p>";
+      //echo "no";
     }
   }
  ?>
@@ -35,6 +37,7 @@
     <h2>
       User Authentication System
     </h2><hr>
+    <?php if(isset($result)) echo $result;?>
     <form method="post" action="">
       <table>
         <tr><td>Email:</td><td><input type="email" aciton="" value="" name="email"></td></tr>
