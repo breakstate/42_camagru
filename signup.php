@@ -2,29 +2,54 @@
   include_once 'database/database.php';
   var_dump($_POST);
 
-  $username = $_POST['username'];
-  $email = $_POST['email'];
-  $password = $_POST['password'];
-  $hashedpw = password_hash($password, PASSWORD_DEFAULT);// check if this is the most secure way
-  $submit = $_POST['submit'];
-  if ($submit === "submit" && $username !== "" && $email !== "" && $password !== "")
+  if (isset($_POST['submit'])) //&& $username !== "" && $email !== "" && $password !== "")
   {
-    try{
-        $sqlInsert = "INSERT INTO tb_users (username, password, email)
-                    VALUES (:username, :hashedpw, :email)";
-        $statement = $db->prepare($sqlInsert);
-        $statement->execute(array(':username' => $username, ':hashedpw' => $hashedpw, ':email' => $email));
+    $form_errors = array();
+    $required_fields = array('email', 'username', 'password');
 
-        if ($statement->rowCount() == 1)
-        {
-          $result = "<p>Registration successfull</p>";
-          //echo "yes";
-        }
-    }catch(PDOException $ex){
-      $result = "<p>An error occurred: " . $ex->getMessage() . "</p>";
-      //echo "no";
+    foreach($required_fields as $name_of_field)
+    {
+      if(!isset($_POST[$name_of_field]) || $_POST[$name_of_field] == NULL)
+      {
+        $form_errors[] = $name_of_field . " is a required field.";
+      }
     }
-  }
+    if (empty($form_errors))
+    {
+      $username = $_POST['username'];
+      $email = $_POST['email'];
+      $password = $_POST['password'];
+      $hashedpw = password_hash($password, PASSWORD_DEFAULT);// check if this is the most secure way
+
+      try{
+          $sqlInsert = "INSERT INTO tb_users (username, password, email)
+                      VALUES (:username, :hashedpw, :email)";
+          $statement = $db->prepare($sqlInsert);
+          $statement->execute(array(':username' => $username, ':hashedpw' => $hashedpw, ':email' => $email));
+
+          if ($statement->rowCount() == 1)
+          {
+            $result = "<p>Registration successful</p>";
+            //echo "yes";
+          }
+      }
+      catch(PDOException $ex)
+      {
+        $result = "<p>An error occurred: " . $ex->getMessage() . "</p>";
+        //echo "no";
+      }
+    }
+    else
+    {
+      $result = "<p>Errors: " . count($form_errors) . "<br>";
+      $result .= "<ul>";
+      foreach($form_errors as $error)
+      {
+        $result .= "<li>{$error}</li>";
+      }
+      $result .= "</ul></p>";
+    }
+}
  ?>
 
 <!DOCTYPE html>
