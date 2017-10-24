@@ -1,19 +1,22 @@
 <?php
-  include_once 'database/database.php';
+  include_once 'resources/database.php';
+  include_once 'resources/utilities.php';
   var_dump($_POST);
 
   if (isset($_POST['submit'])) //&& $username !== "" && $email !== "" && $password !== "")
   {
+    // initialize arrray to store error messages
     $form_errors = array();
+    // stores list of required fields
     $required_fields = array('email', 'username', 'password');
+    // add list of required fields that are missing to form_errors array
+    $form_errors = array_merge($form_errors, check_empty_fields($required_fields));
+    // set minimum lengths of fields
+    $field_lengths = array('email' => 3, 'username' => 4, 'password' => 6);
+    // add list of entries that are too short
+    $form_errors = array_merge($form_errors, check_min_length($field_lengths));
 
-    foreach($required_fields as $name_of_field)
-    {
-      if(!isset($_POST[$name_of_field]) || $_POST[$name_of_field] == NULL)
-      {
-        $form_errors[] = $name_of_field . " is a required field.";
-      }
-    }
+
     if (empty($form_errors))
     {
       $username = $_POST['username'];
@@ -21,7 +24,8 @@
       $password = $_POST['password'];
       $hashedpw = password_hash($password, PASSWORD_DEFAULT);// check if this is the most secure way
 
-      try{
+      try
+      {
           $sqlInsert = "INSERT INTO tb_users (username, password, email)
                       VALUES (:username, :hashedpw, :email)";
           $statement = $db->prepare($sqlInsert);
@@ -49,8 +53,8 @@
       }
       $result .= "</ul></p>";
     }
-}
- ?>
+  }
+?>
 
 <!DOCTYPE html>
 <html>
