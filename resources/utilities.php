@@ -41,9 +41,30 @@ function check_min_length($field_lengths)
 
 function check_email($data)
 {
-
+  $form_errors = array();
+  $key = 'email';
+  if (array_key_exists($key, $data))
+  {
+    if ($data[$key] != NULL)
+    {
+      if (filter_var($data[$key], FILTER_VALIDATE_EMAIL) === FALSE)
+      {
+        $form_errors[] = $data[$key] . " is not a valid email address.";
+      }
+    }
+  }
+  return ($form_errors);
 }
-/*
-show errors
-*/
+
+function show_form_errors($form_errors)
+{
+  $result = "<p>Errors: " . count($form_errors) . "<br>";
+  $result .= "<ul>";
+  foreach($form_errors as $error)
+  {
+    $result .= "<li>{$error}</li>";
+  }
+  $result .= "</ul></p>";
+  return ($result);
+}
 ?>

@@ -1,3 +1,33 @@
+<?php
+include_once 'resources/session.php';
+include_once 'resources/database.php';
+include_once 'resources/utilities.php';
+
+if (isset($_POST['loginBtn']))
+{
+  $form_errors = array();
+  $required_fields = array('username', 'password');
+  $field_lengths = array('username' => 4, 'password' => 6);
+
+  $form_errors = array_merge($form_errors, check_empty_fields($required_fields));
+  $form_errors = array_merge($form_errors, check_min_length($field_lengths));
+
+  if (empty($form_errors))
+  {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+    // check if user exists
+    $sqlQuery = "SELECT * FROM tb_users WHERE username = :username";
+    $statement = $db->prepare($sqlQuery);
+    $statement->execute(array(':username' => $username));
+  }
+  else
+  {
+    $result = show_form_errors($form_errors);
+  }
+}
+?>
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -8,11 +38,12 @@
     <h2>
       User Authentication System
     </h2><hr>
+    <?php if (isset($result)) echo $result; ?>
     <form method="post" action="">
       <table>
-        <tr><td>Username:</td><td><input type="text" aciton="" value="" name="username"></td></tr>
-        <tr><td>Password:</td><td><input type="password" aciton="" value="" name="password"></td></tr>
-        <tr><td></td><td><input type="submit" value="submit" name="submit"></td>
+        <tr><td>username:</td><td><input type="text" aciton="" value="" name="username"></td></tr>
+        <tr><td>password:</td><td><input type="password" aciton="" value="" name="password"></td></tr>
+        <tr><td></td><td><input type="submit" value="login" name="loginBtn"></td>
       </table>
     </form>
     <a href="index.php">Back</a>

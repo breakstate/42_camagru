@@ -1,9 +1,8 @@
 <?php
   include_once 'resources/database.php';
   include_once 'resources/utilities.php';
-  var_dump($_POST);
 
-  if (isset($_POST['submit'])) //&& $username !== "" && $email !== "" && $password !== "")
+  if (isset($_POST['signupBtn'])) //&& $username !== "" && $email !== "" && $password !== "")
   {
     // initialize arrray to store error messages
     $form_errors = array();
@@ -15,8 +14,11 @@
     $field_lengths = array('email' => 3, 'username' => 4, 'password' => 6);
     // add list of entries that are too short
     $form_errors = array_merge($form_errors, check_min_length($field_lengths));
+    // check validity of email address
+    $form_errors = array_merge($form_errors, check_email($_POST));
 
 
+    // if no form errors: do the following
     if (empty($form_errors))
     {
       $username = $_POST['username'];
@@ -27,34 +29,27 @@
       try
       {
           $sqlInsert = "INSERT INTO tb_users (username, password, email)
-                      VALUES (:username, :hashedpw, :email)";
+                        VALUES (:username, :hashedpw, :email)";
           $statement = $db->prepare($sqlInsert);
           $statement->execute(array(':username' => $username, ':hashedpw' => $hashedpw, ':email' => $email));
 
           if ($statement->rowCount() == 1)
           {
             $result = "<p>Registration successful</p>";
-            //echo "yes";
           }
       }
       catch(PDOException $ex)
       {
         $result = "<p>An error occurred: " . $ex->getMessage() . "</p>";
-        //echo "no";
       }
     }
     else
     {
-      $result = "<p>Errors: " . count($form_errors) . "<br>";
-      $result .= "<ul>";
-      foreach($form_errors as $error)
-      {
-        $result .= "<li>{$error}</li>";
-      }
-      $result .= "</ul></p>";
+      $result = show_form_errors($form_errors);
     }
   }
 ?>
+
 
 <!DOCTYPE html>
 <html>
@@ -69,10 +64,10 @@
     <?php if(isset($result)) echo $result;?>
     <form method="post" action="">
       <table>
-        <tr><td>Email:</td><td><input type="email" aciton="" value="" name="email"></td></tr>
-        <tr><td>Username:</td><td><input type="text" aciton="" value="" name="username"></td></tr>
-        <tr><td>Password:</td><td><input type="password" aciton="" value="" name="password"></td></tr>
-        <tr><td></td><td><input type="submit" value="submit" name="submit"></td>
+        <tr><td>email:</td><td><input type="text" aciton="" value="" name="email"></td></tr>
+        <tr><td>username:</td><td><input type="text" aciton="" value="" name="username"></td></tr>
+        <tr><td>password:</td><td><input type="password" aciton="" value="" name="password"></td></tr>
+        <tr><td></td><td><input type="submit" value="signup" name="signupBtn"></td>
       </table>
     </form>
     <a href="index.php">Back</a>
