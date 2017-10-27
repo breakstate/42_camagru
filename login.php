@@ -29,8 +29,8 @@ if (isset($_POST['loginBtn']))
 
       if (password_verify($password, $hashed_pw))
       {
-        $session['id'] = $id;
-        $session['username'] = $username;
+        $_SESSION['id'] = $id;
+        $_SESSION['username'] = $username;
         header("location: index.php");
       }
       else
