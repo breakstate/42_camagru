@@ -11,15 +11,33 @@ if (isset($_POST['loginBtn']))
 
   $form_errors = array_merge($form_errors, check_empty_fields($required_fields));
   $form_errors = array_merge($form_errors, check_min_length($field_lengths));
-
   if (empty($form_errors))
   {
+
     $username = $_POST['username'];
     $password = $_POST['password'];
     // check if user exists
     $sqlQuery = "SELECT * FROM tb_users WHERE username = :username";
     $statement = $db->prepare($sqlQuery);
     $statement->execute(array(':username' => $username));
+
+    if ($row = $statement->fetch())
+    {
+      $id = $row['id'];
+      $hashed_pw = $row['password'];
+      $username = $row['username'];
+
+      if (password_verify($password, $hashed_pw))
+      {
+        $session['id'] = $id;
+        $session['username'] = $username;
+        header("location: index.php");
+      }
+      else
+      {
+        $result = "<p>Invalid username or password</p>";
+      }
+    }
   }
   else
   {
