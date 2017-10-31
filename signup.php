@@ -35,7 +35,9 @@
 
           if ($statement->rowCount() == 1)
           {
-            $result = "<p>Registration successful</p>";
+            $result = "<p>Registration successful!</p><br><p>Verification email has been sent.</p>";
+            $msg = wordwrap("Registration successful!", 70);
+            mail($email, "Camagru registration test", $msg);
           }
       }
       catch(PDOException $ex)

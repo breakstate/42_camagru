@@ -21,7 +21,7 @@ if (isset($_POST['loginBtn']))
     $statement = $db->prepare($sqlQuery);
     $statement->execute(array(':username' => $username));
 
-    if ($row = $statement->fetch())
+    while ($row = $statement->fetch())
     {
       $id = $row['id'];
       $hashed_pw = $row['password'];
