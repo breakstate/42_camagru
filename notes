@@ -1,0 +1,55 @@
+1)  mamp: server + db
+2)  create db
+3)  create tables (users, photos, comments, likes)
+4)  create signup page
+		-username
+		-full name
+		-password (upper, lower and num)
+		-valid email
+5)  set up PDO in php
+6)  send data from signup formto db-> hash password before saving to db
+7)  send verification email -> unique id
+8)  create login page
+9)  verify details supplied by login form with details in db
+10) forgot password->
+11) home page
+		-camera
+		-overlays
+		-logout button
+		-capture image
+		-image upload
+		-link to gallery
+		-link to feeds
+12) canvas for image capture
+13) JS save feed from webcam to canvas
+14) AJAX request -> DataToURL(canvas)
+		-varxhttp = new xmlhttprequest
+		-xhttp.open("POST", "saveimg.php", true)
+		-xhttp.header
+		-xhttp.send("photo = canvasdata")
+15) overlay image
+		-imagefromstring -> image object
+		-split received base64 image data
+		-imagecopy(dest, src, xd, yd, xs, ys, w, h)
+		-imagepng()
+		-tempname()
+16) save image to db
+17) gallery page
+		-display only your images
+		-allow to delete your images
+18) feeds page
+		-all images of all users
+		-each image like button
+		-coments section for each image
+19) write likes to db
+		-check if a user has liked an image
+		-can do a like count
+20) write comments to db
+		-protect against html injection
+		-send email notification
+		-enable/disable notifications
+21) create profile page
+		-edit username
+		-edit email
+		-edit password
+22) do bonuses

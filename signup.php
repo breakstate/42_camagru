@@ -38,6 +38,7 @@
             $result = "<p>Registration successful!</p><br><p>Verification email has been sent.</p>";
             $msg = wordwrap("Registration successful!", 70);
             mail($email, "Camagru registration test", $msg);
+            $debug = "<p>email should be sent to $email</p>";//debug message to check if execution
           }
       }
       catch(PDOException $ex)
@@ -64,6 +65,7 @@
       User Authentication System
     </h2><hr>
     <?php if(isset($result)) echo $result;?>
+    <?php if(isset($debug)) echo $debug;?><!debug message to check if statement execution>
     <form method="post" action="">
       <table>
         <tr><td>email:</td><td><input type="text" aciton="" value="" name="email"></td></tr>
