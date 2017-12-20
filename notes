@@ -20,6 +20,7 @@
 		-image upload
 		-link to gallery
 		-link to feeds
+		-link to profile
 12) canvas for image capture
 13) JS save feed from webcam to canvas
 14) AJAX request -> DataToURL(canvas)
