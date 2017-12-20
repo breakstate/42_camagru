@@ -1,7 +1,6 @@
 <?php
   include_once 'resources/database.php';
   include_once 'resources/utilities.php';
-
   if (isset($_POST['signupBtn'])) //&& $username !== "" && $email !== "" && $password !== "")
   {
     // initialize arrray to store error messages
@@ -21,6 +20,7 @@
     // if no form errors: do the following
     if (empty($form_errors))
     {
+      var_dump($_POST);
       $username = $_POST['username'];
       $email = $_POST['email'];
       $password = $_POST['password'];
@@ -36,9 +36,14 @@
           if ($statement->rowCount() == 1)
           {
             $result = "<p>Registration successful!</p><br><p>Verification email has been sent.</p>";
-            $msg = wordwrap("Registration successful!", 70);
-            mail($email, "Camagru registration test", $msg);
-            $debug = "<p>email should be sent to $email</p>";//debug message to check if execution
+            $msg = "Registration successful";
+            $msg = wordwrap($msg, 70);
+            //mail('juganaught72@gmail.com', 'My Subject', "Poop IN my Mouth");
+            $mail_result = mail($email, 'Camagru registration test', $msg, $header);
+            $debug = "<p>email containing [$msg] should be sent to [$email]</p>";//debug message to check if execution
+            echo "mail_result = [$mail_result]";
+            //short timer?
+            //header("location: login.php");
           }
       }
       catch(PDOException $ex)

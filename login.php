@@ -20,13 +20,14 @@ if (isset($_POST['loginBtn']))
     $sqlQuery = "SELECT * FROM tb_users WHERE username = :username";
     $statement = $db->prepare($sqlQuery);
     $statement->execute(array(':username' => $username));
-
-    while ($row = $statement->fetch())//doesn't register an incorrect email as an error
+    $user_exists = 0;
+    while ($row = $statement->fetch())//doesn't register an incorrect username as an error
     {
+      $user_exists = 1;
       $id = $row['id'];
       $hashed_pw = $row['password'];
       $username = $row['username'];
-
+      echo "username is: " . $username;
       if (password_verify($password, $hashed_pw))
       {
         $_SESSION['id'] = $id;
@@ -37,6 +38,11 @@ if (isset($_POST['loginBtn']))
       {
         $result = "<p>Invalid username or password</p>";
       }
+    }
+    if ($user_exists == 0)
+    {
+      $result = "<p>Invalid username or password</p>";
+      //$form_errors = array_merge($form_errors, "Invalid username")
     }
   }
   else
